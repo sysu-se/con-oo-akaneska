@@ -1,54 +1,22 @@
 <script>
-	import { onMount } from 'svelte';
-	import { validateSencode } from '@sudoku/sencode';
-	import game from '@sudoku/game';
-	import { modal } from '@sudoku/stores/modal';
-	import { gameWon } from '@sudoku/stores/game';
-	import Board from './components/Board/index.svelte';
-	import Controls from './components/Controls/index.svelte';
-	import Header from './components/Header/index.svelte';
-	import Modal from './components/Modal/index.svelte';
+  import { gameStore } from './stores/gameStore';
+  import SudokuBoard from './components/SudokuBoard.svelte';
 
-	gameWon.subscribe(won => {
-		if (won) {
-			game.pause();
-			modal.show('gameover');
-		}
-	});
-
-	onMount(() => {
-		let hash = location.hash;
-
-		if (hash.startsWith('#')) {
-			hash = hash.slice(1);
-		}
-
-		let sencode;
-		if (validateSencode(hash)) {
-			sencode = hash;
-		}
-
-		modal.show('welcome', { onHide: game.resume, sencode });
-	});
+  $: ({ grid, solved } = $gameStore);
 </script>
 
-<!-- Timer, Menu, etc. -->
-<header>
-	<Header />
-</header>
+<main>
+  <h1>Sudoku</h1>
+  <SudokuBoard {grid} on:input={e => {
+    gameStore.setCell(e.detail.r, e.detail.c, e.detail.v);
+  }} />
 
-<!-- Sudoku Field -->
-<section>
-	<Board />
-</section>
+  <div style="margin-top:16px;">
+    <button on:click={() => gameStore.undo()}>Undo</button>
+    <button on:click={() => gameStore.redo()}>Redo</button>
+  </div>
 
-<!-- Keyboard -->
-<footer>
-	<Controls />
-</footer>
-
-<Modal />
-
-<style global>
-	@import "./styles/global.css";
-</style>
+  {#if solved}
+    <h2 style="color:green;">✅ Solved!</h2>
+  {/if}
+</main>
