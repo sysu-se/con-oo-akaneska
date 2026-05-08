@@ -5,18 +5,16 @@ function createSudoku(grid) {
   return new Sudoku(grid);
 }
 
-function createSudokuFromJSON(json) {
-  const grid = JSON.parse(json);
-  return new Sudoku(grid);
+function createSudokuFromJSON(jsonObj) {
+  return new Sudoku(jsonObj);
 }
 
 function createGame(sudoku) {
   return new Game(sudoku);
 }
 
-function createGameFromJSON(json) {
-  const grid = JSON.parse(json);
-  const sudoku = new Sudoku(grid);
+function createGameFromJSON(jsonObj) {
+  const sudoku = new Sudoku(jsonObj);
   return new Game(sudoku);
 }
 

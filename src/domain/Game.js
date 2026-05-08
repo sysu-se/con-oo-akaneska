@@ -1,4 +1,4 @@
-const { Sudoku } = require('./Sudoku');
+const Sudoku = require('./Sudoku').Sudoku;
 
 class Game {
   constructor(initialSudoku) {
@@ -6,15 +6,11 @@ class Game {
     this._pointer = 0;
   }
 
-  guess(row, col, value) {
-    // 1. 基于当前状态创建新快照
+  guess(move) {
     const current = this._history[this._pointer].clone();
-    current.guess(row, col, value);
-    
-    // 2. 清除redo历史
+    current.guess(move);
+
     this._history = this._history.slice(0, this._pointer + 1);
-    
-    // 3. 添加新快照并移动指针
     this._history.push(current);
     this._pointer++;
   }
