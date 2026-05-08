@@ -2,8 +2,14 @@ const Sudoku = require('./Sudoku').Sudoku;
 
 class Game {
   constructor(initialSudoku) {
-    this._history = [initialSudoku.clone()];
-    this._pointer = 0;
+    if (typeof initialSudoku.clone !== 'function') {
+      throw new Error('Game requires a sudoku instance with clone method');
+    }
+    this.initialSudoku = initialSudoku;
+    this.currentSudoku = initialSudoku.clone();
+    // 初始化 undo/redo 历史
+    this.undoHistory = [];
+    this.redoHistory = [];
   }
 
   guess(move) {
