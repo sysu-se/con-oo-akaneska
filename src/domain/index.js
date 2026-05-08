@@ -1,10 +1,28 @@
-import { Sudoku } from './Sudoku';
-import { Game } from './Game';
+const { Sudoku } = require('./Sudoku');
+const { Game } = require('./Game');
 
-export function createSudoku(grid) {
+function createSudoku(grid) {
   return new Sudoku(grid);
 }
 
-export function createGame(sudoku) {
+function createSudokuFromJSON(json) {
+  const grid = JSON.parse(json);
+  return new Sudoku(grid);
+}
+
+function createGame(sudoku) {
   return new Game(sudoku);
 }
+
+function createGameFromJSON(json) {
+  const grid = JSON.parse(json);
+  const sudoku = new Sudoku(grid);
+  return new Game(sudoku);
+}
+
+module.exports = {
+  createSudoku,
+  createSudokuFromJSON,
+  createGame,
+  createGameFromJSON
+};
