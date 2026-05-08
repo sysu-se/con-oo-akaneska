@@ -9,13 +9,16 @@ function createSudokuFromJSON(jsonObj) {
   return new Sudoku(jsonObj);
 }
 
-function createGame(sudoku) {
+function createGame({ sudoku }) {
+  if (!sudoku) {
+    throw new Error('Game requires a sudoku instance');
+  }
   return new Game(sudoku);
 }
 
-function createGameFromJSON(jsonObj) {
-  const sudoku = new Sudoku(jsonObj);
-  return new Game(sudoku);
+function createGameFromJSON(json) {
+  const sudoku = createSudokuFromJSON(json.sudoku);
+  return createGame({ sudoku });
 }
 
 module.exports = {
