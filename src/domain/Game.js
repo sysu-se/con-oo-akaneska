@@ -7,9 +7,9 @@ class Game {
     }
     this.initialSudoku = initialSudoku;
     this.currentSudoku = initialSudoku.clone();
-    // 初始化 undo/redo 历史
-    this.undoHistory = [];
-    this.redoHistory = [];
+    this._history = [initialSudoku.clone()];
+    this._pointer = 0;
+    this._redoStack = [];
   }
 
   guess(move) {
@@ -19,22 +19,43 @@ class Game {
     this._history = this._history.slice(0, this._pointer + 1);
     this._history.push(current);
     this._pointer++;
+    
+    this._redoStack = [];
   }
 
   undo() {
     if (this._pointer <= 0) return false;
+    this._redoStack.push(this._history[this._pointer]);
     this._pointer--;
     return true;
   }
 
   redo() {
-    if (this._pointer >= this._history.length - 1) return false;
+    if (this._redoStack.length === 0) return false;
     this._pointer++;
+    this._history[this._pointer] = this._redoStack.pop();
     return true;
+  }
+
+  canUndo() {
+    return this._pointer > 0;
+  }
+
+  canRedo() {
+    return this._redoStack.length > 0;
   }
 
   getSudoku() {
     return this._history[this._pointer].clone();
+  }
+
+  toJSON() {
+    return {
+      sudoku: this._history[this._pointer].toJSON(),
+      history: this._history.map(h => h.toJSON()),
+      pointer: this._pointer,
+      redoStack: this._redoStack.map(r => r.toJSON())
+    };
   }
 }
 

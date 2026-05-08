@@ -13,12 +13,26 @@ function createGame({ sudoku }) {
   if (!sudoku) {
     throw new Error('Game requires a sudoku instance');
   }
-  return new Game(sudoku);
+  const game = new Game(sudoku);
+  
+  return game;
 }
 
 function createGameFromJSON(json) {
   const sudoku = createSudokuFromJSON(json.sudoku);
-  return createGame({ sudoku });
+  const game = createGame({ sudoku });
+  
+  if (json.history) {
+    game._history = json.history.map(h => createSudokuFromJSON(h));
+  }
+  if (json.pointer !== undefined) {
+    game._pointer = json.pointer;
+  }
+  if (json.redoStack) {
+    game._redoStack = json.redoStack.map(r => createSudokuFromJSON(r));
+  }
+  
+  return game;
 }
 
 module.exports = {

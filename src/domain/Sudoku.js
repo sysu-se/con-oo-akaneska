@@ -1,6 +1,5 @@
 class Sudoku {
   constructor(grid) {
-    // 深度拷贝，通过防御性拷贝测试
     this._grid = JSON.parse(JSON.stringify(grid));
   }
 
